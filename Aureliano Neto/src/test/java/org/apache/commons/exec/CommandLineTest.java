@@ -256,10 +256,18 @@ public class CommandLineTest {
      * do that without adding a space, e.g. "500x> ".
      */
     @Test
-    public void testParseComplexCommandLine1() {
+    public void testParseComplexCommandLine1PutIn() {
         final HashMap<String, String> substitutionMap =
             new HashMap<>();
         substitutionMap.put("in", "source.jpg");
+        final CommandLine cmdl = CommandLine.parse("cmd /C convert ${in} -resize \"\'500x> \'\" ${out}", substitutionMap);
+        assertEquals("[cmd, /C, convert, source.jpg, -resize, \"500x> \", target.jpg]", cmdl.toString());
+    }
+
+    @Test
+    public void testParseComplexCommandLine1PutOut() {
+        final HashMap<String, String> substitutionMap =
+            new HashMap<>();
         substitutionMap.put("out", "target.jpg");
         final CommandLine cmdl = CommandLine.parse("cmd /C convert ${in} -resize \"\'500x> \'\" ${out}", substitutionMap);
         assertEquals("[cmd, /C, convert, source.jpg, -resize, \"500x> \", target.jpg]", cmdl.toString());
