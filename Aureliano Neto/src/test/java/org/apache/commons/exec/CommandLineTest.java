@@ -271,7 +271,7 @@ public class CommandLineTest {
      * in a one-line command string.
      */
     @Test
-    public void testParseComplexCommandLine2() {
+    public void testParseComplexCommandLine2Arguments0() {
 
         final String commandline = "./script/jrake cruise:publish_installers "
             + "INSTALLER_VERSION=unstable_2_1 "
@@ -282,9 +282,33 @@ public class CommandLineTest {
         final CommandLine cmdl = CommandLine.parse(commandline);
         final String[] args = cmdl.getArguments();
         assertEquals(args[0], "cruise:publish_installers");
+    }
+
+    @Test
+    public void testParseComplexCommandLine2Arguments1() {
+
+        final String commandline = "./script/jrake cruise:publish_installers "
+            + "INSTALLER_VERSION=unstable_2_1 "
+            + "INSTALLER_PATH=\"/var/lib/ cruise-agent/installers\" "
+            + "INSTALLER_DOWNLOAD_SERVER=\'something\' "
+            + "WITHOUT_HELP_DOC=true";
+
+        final CommandLine cmdl = CommandLine.parse(commandline);
+        final String[] args = cmdl.getArguments();
         assertEquals(args[1], "INSTALLER_VERSION=unstable_2_1");
-        // assertEquals(args[2], "INSTALLER_PATH=\"/var/lib/ cruise-agent/installers\"");
-        // assertEquals(args[3], "INSTALLER_DOWNLOAD_SERVER='something'");
+    }
+
+    @Test
+    public void testParseComplexCommandLine2Arguments4() {
+
+        final String commandline = "./script/jrake cruise:publish_installers "
+            + "INSTALLER_VERSION=unstable_2_1 "
+            + "INSTALLER_PATH=\"/var/lib/ cruise-agent/installers\" "
+            + "INSTALLER_DOWNLOAD_SERVER=\'something\' "
+            + "WITHOUT_HELP_DOC=true";
+
+        final CommandLine cmdl = CommandLine.parse(commandline);
+        final String[] args = cmdl.getArguments();
         assertEquals(args[4], "WITHOUT_HELP_DOC=true");
     }
 
@@ -294,13 +318,22 @@ public class CommandLineTest {
      * cmd.exe /C c:\was51\Web Sphere\AppServer\bin\versionInfo.bat
      */
     @Test
-    public void testParseRealLifeCommandLine_1() {
+    public void testParseRealLifeCommandLine_1ArgsPosition0() {
 
         final String commandline = "cmd.exe /C \"c:\\was51\\Web Sphere\\AppServer\\bin\\versionInfo.bat\"";
 
         final CommandLine cmdl = CommandLine.parse(commandline);
         final String[] args = cmdl.getArguments();
         assertEquals("/C", args[0]);
+    }
+
+    @Test
+    public void testParseRealLifeCommandLine_1ArgsPosition1() {
+
+        final String commandline = "cmd.exe /C \"c:\\was51\\Web Sphere\\AppServer\\bin\\versionInfo.bat\"";
+
+        final CommandLine cmdl = CommandLine.parse(commandline);
+        final String[] args = cmdl.getArguments();
         assertEquals("\"c:\\was51\\Web Sphere\\AppServer\\bin\\versionInfo.bat\"", args[1]);
     }
 
