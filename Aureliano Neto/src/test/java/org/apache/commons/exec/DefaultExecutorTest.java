@@ -237,11 +237,28 @@ public class DefaultExecutorTest {
      * @throws Exception the test failed
      */
     @Test
-    public void testExecuteAsyncWithTooLateUserTermination() throws Exception {
+    public void testExecuteAsyncWithTooLateUserTerminationSetWatchdogMethod() throws Exception {
         final CommandLine cl = new CommandLine(foreverTestScript);
         final DefaultExecuteResultHandler handler = new DefaultExecuteResultHandler();
         final ExecuteWatchdog watchdog = new ExecuteWatchdog(3000);
         exec.setWatchdog(watchdog);
+        // wait for script to be terminated by the watchdog
+        Thread.sleep(6000);
+        // try to terminate the already terminated process
+        watchdog.destroyProcess();
+        // wait until the result of the process execution is propagated
+        handler.waitFor(WAITFOR_TIMEOUT);
+        assertTrue("Watchdog should have killed the process already", watchdog.killedProcess());
+        assertFalse("Watchdog is no longer watching the process", watchdog.isWatching());
+        assertTrue("ResultHandler received a result", handler.hasResult());
+        assertNotNull("ResultHandler received an exception as result", handler.getException());
+    }
+
+    @Test
+    public void testExecuteAsyncWithTooLateUserTerminationSetExecuteMethod() throws Exception {
+        final CommandLine cl = new CommandLine(foreverTestScript);
+        final DefaultExecuteResultHandler handler = new DefaultExecuteResultHandler();
+        final ExecuteWatchdog watchdog = new ExecuteWatchdog(3000);
         exec.execute(cl, handler);
         // wait for script to be terminated by the watchdog
         Thread.sleep(6000);
